@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Digital Logic Gate Simulator</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+    <div>
+        <h1>Digital Logic Gate Simulator</h1>
+        <p>Build, connect and solve digital logic circuits</p>
+    </div>
+
+    <button id="themeBtn" class="top-btn">
+        🌙 Dark Mode
+    </button>
+
+</header>
+
+
+<!-- BOOLEAN SOLVER -->
+
+<section class="solver">
+
+    <div class="solver-title">
+
+        <h2>🔍 Boolean Expression Solver</h2>
+
+        <p>
+            Enter a Boolean expression to automatically generate
+            its logic-gate circuit and truth table.
+        </p>
+
+    </div>
+
+    <div class="search-row">
+
+        <input
+            type="text"
+            id="booleanInput"
+            placeholder="Example: (A+B).C or A'B+BC'"
+            autocomplete="off"
+        >
+
+        <button id="solveBtn">
+            ⚙ Solve
+        </button>
+
+        <button id="exampleBtn">
+            Example
+        </button>
+
+    </div>
+
+    <div class="supported">
+
+        <b>Supported:</b>
+
+        <span>A+B</span>
+        <span>A.B</span>
+        <span>AB</span>
+        <span>A'</span>
+        <span>(A+B).C</span>
+        <span>XOR</span>
+        <span>NAND</span>
+        <span>NOR</span>
+        <span>XNOR</span>
+
+    </div>
+
+    <div id="solverResult">
+
+        Enter a Boolean expression and click
+        <b>Solve</b>.
+
+    </div>
+
+</section>
+
+
+<div class="app">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2>Logic Gates</h2>
+
+        <p class="hint">
+            Drag a gate into the workspace.
+        </p>
+
+
+        <div class="palette">
+
+            <div
+                class="palette-gate"
+                draggable="true"
+                data-gate="AND">
+                AND
+            </div>
+
+            <div
+                class="palette-gate"
+                draggable="true"
+                data-gate="OR">
+                OR
+            </div>
+
+            <div
+                class="palette-gate"
+                draggable="true"
+                data-gate="NOT">
+                NOT
+            </div>
+
+            <div
+                class="palette-gate"
+                draggable="true"
+                data-gate="NAND">
+                NAND
+            </div>
+
+            <div
+                class="palette-gate"
+                draggable="true"
+                data-gate="NOR">
+                NOR
+            </div>
+
+            <div
+                class="palette-gate"
+                draggable="true"
+                data-gate="XOR">
+                XOR
+            </div>
+
+            <div
+                class="palette-gate"
+                draggable="true"
+                data-gate="XNOR">
+                XNOR
+            </div>
+
+        </div>
+
+
+        <hr>
+
+
+        <h2>Controls</h2>
+
+        <div class="btn-grid">
+
+            <button id="addInputBtn">
+                + Input
+            </button>
+
+            <button id="addOutputBtn">
+                + Output
+            </button>
+
+            <button id="undoBtn">
+                ↶ Undo
+            </button>
+
+            <button id="redoBtn">
+                ↷ Redo
+            </button>
+
+            <button id="saveBtn">
+                💾 Save
+            </button>
+
+            <button id="loadBtn">
+                📂 Load
+            </button>
+
+            <input
+                id="fileInput"
+                type="file"
+                accept=".json"
+                hidden
+            >
+
+            <button id="resetBtn">
+                ↺ Reset Inputs
+            </button>
+
+            <button id="zoomInBtn">
+                ＋ Zoom
+            </button>
+
+            <button id="zoomOutBtn">
+                － Zoom
+            </button>
+
+            <button id="zoomResetBtn">
+                100%
+            </button>
+
+            <button id="renameBtn">
+                🏷 Rename
+            </button>
+
+            <button id="expressionBtn">
+                ƒ Expression
+            </button>
+
+            <button id="validateBtn">
+                ✓ Validate
+            </button>
+
+            <button id="challengeBtn" class="purple">
+                🎯 Challenge
+            </button>
+
+            <button id="truthTableBtn" class="purple">
+                Truth Table
+            </button>
+
+            <button id="circuitTruthBtn" class="purple">
+                Circuit Table
+            </button>
+
+            <button id="deleteBtn" class="danger">
+                🗑 Delete
+            </button>
+
+            <button id="clearBtn" class="danger">
+                Clear Circuit
+            </button>
+
+        </div>
+
+
+        <div class="zoom-readout">
+
+            Zoom:
+            <span id="zoomValue">
+                100%
+            </span>
+
+        </div>
+
+
+        <hr>
+
+
+        <div class="help">
+
+            <h3>How to Connect</h3>
+
+            <p>1. Add inputs and gates.</p>
+
+            <p>2. Drag from an output ●.</p>
+
+            <p>3. Release on an input ●.</p>
+
+            <p>4. Connect the final gate to OUTPUT.</p>
+
+            <p>5. Click an input's 0/1 switch.</p>
+
+            <p>6. Click a wire and press Delete.</p>
+
+        </div>
+
+    </aside>
+
+
+    <!-- WORKSPACE -->
+
+    <main class="workspace-container">
+
+        <div class="toolbar">
+
+            <strong>
+                Circuit Workspace
+            </strong>
+
+            <span id="status">
+                Ready
+            </span>
+
+        </div>
+
+
+        <div id="workspace">
+
+            <div id="canvas">
+
+                <svg id="wires"></svg>
+
+                <div id="nodes"></div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- INFORMATION -->
+
+<section class="info-section">
+
+
+    <div class="info-card">
+
+        <h2>
+            Boolean Expression
+        </h2>
+
+        <div id="expressionBox">
+
+            Build a circuit or solve an expression.
+
+        </div>
+
+    </div>
+
+
+    <div class="info-card">
+
+        <h2>
+            Circuit Validation
+        </h2>
+
+        <div id="validationBox">
+
+            Click Validate Circuit.
+
+        </div>
+
+    </div>
+
+
+    <div class="info-card challenge-card">
+
+        <h2>
+            Logic Challenge
+        </h2>
+
+        <div id="challengeBox">
+
+            Click Challenge to start.
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- TRUTH TABLE -->
+
+<section class="truth-section">
+
+    <h2>
+        Truth Table
+    </h2>
+
+    <h3 id="truthTitle">
+
+        Select a gate and click
+        "Truth Table"
+
+    </h3>
+
+
+    <div class="table-container">
+
+        <table id="truthTable">
+
+            <thead>
+
+                <tr>
+
+                    <th>A</th>
+                    <th>B</th>
+                    <th>Y</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="truthTableBody"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    Digital Logic Gate Simulator
+    • HTML • CSS • JavaScript
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
